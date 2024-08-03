@@ -1,4 +1,5 @@
 # このリポジトリについて
+
 ## 概要
 
 以下のページのFastAPIでToDoアプリを作るチュートリアルについてのrepositoryです。
@@ -6,6 +7,8 @@ https://rightcode.co.jp/blogs/8708
 
 2019年に作られていて文法がやや古いため、エラーになる部分あったり
 誤記があったりするため、実際に動くコードをアップロードしています。また、記事に沿ってコーディングした際のエラー解消方法をReadme記載しています。
+
+<br>
 
 ## 本リポジトリの動かし方
 
@@ -39,11 +42,20 @@ python run.py
 ```
 
 
+<br>
+<br>
+<br>
+
 # エラー解消方法
+
+
+<br>
+
 ## 第１回
+
 ### controllers.pyに加筆
 
-最後に閉じカッコが足りない
+最後に閉じカッコが足りないので足しましょう
 
 ### templates/layout.html
 
@@ -62,6 +74,9 @@ pip install jinja2
 まだindex.htmlが無いためサーバーを起動してもエラーになります。  
 index.htmlを作成後、サーバーを起動してみてください
 
+
+<br>
+<br>
 
 ## 第2回
 
@@ -125,6 +140,9 @@ request.form()でエラーが出た場合は、`import urllib.parse`を書き加
 直前で書いたcontrollerの記述を見れば自明ですはありますが、
 templatesフォルダ内にcomplete.htmlというファイルを作って登録完了の画面の中身を記述しましょう
 
+<br>
+<br>
+
 ## 第4回
 ### MyCalendarクラス
 
@@ -166,6 +184,10 @@ sqliteを立ち上げて、以下のように打ってみましょう。（日�
 insert into task (user_id,content,deadline,date,done)
 values(1,'test_test',datetime('2024-08-05'),datetime('2024-08-04'),0);
 ```
+
+
+<br>
+<br>
 
 ## 第5回
 
@@ -241,3 +263,11 @@ detail.htmlの/add向けのform内にも以下のinputタグを追記してく�
 
 また、RediretResponseも出てきていますので、
 同様にstatus codeを303にしてredirectしましょう。
+
+
+
+<br>
+<br>
+
+## 備考
+もし、その他にエラーが出たら質問チャンネルに投稿お願いします
