@@ -79,11 +79,11 @@ def admin(request: Request, credentials: HTTPBasicCredentials = Depends(security
 
 securityの定義をしていないためなので
 以下のようにsecurityを定義してあげる
-``` python
+``` diff
 
 import hashlib 
 
-security = HTTPBasic()
++ security = HTTPBasic()
 
 app = FastAPI(
     ...
@@ -100,27 +100,22 @@ templates/resiter.htmlを作成してその中にhtmlを記述してください
 
 request.form()でエラーが出た場合は、`import urllib.parse`を書き加えて、更に以下のように書き換えてください
 
-``` python
-    if request.method == 'POST':
-        # POSTデータ
-        data = await request.form()
-        username = data.get('username')
-        password = data.get('password')
-        password_tmp = data.get('password_tmp')
-        mail = data.get('mail')
-```
-↓
-``` python
+``` diff
 
     if request.method == 'POST':
         # POSTデータ
-        request_body = await request.body()
-        data = urllib.parse.parse_qs(request_body.decode())
-        
-        username, = data.get('username') # コンマが増えているので注意
-        password, = data.get('password') # コンマが増えているので注意
-        password_tmp, = data.get('password_tmp') # コンマが増えているので注意
-        mail, = data.get('mail') # コンマが増えているので注意
+-        data = await request.form()
++        request_body = await request.body()
++        data = urllib.parse.parse_qs(request_body.decode())
+
+-        username = data.get('username')
+-        password = data.get('password')
+-        password_tmp = data.get('password_tmp')
+-        mail = data.get('mail')
++        username, = data.get('username')
++        password, = data.get('password')
++        password_tmp, = data.get('password_tmp')
++        mail, = data.get('mail')
 ```
 
 
@@ -135,11 +130,12 @@ templatesフォルダ内にcomplete.htmlというファイルを作って登録�
 
 以下の記述の`ja_jp`の部分を`ja_JP.UTF-8`と書き換えるか、空文字にしましょう
 
-``` python
+``` diff
 def __init__(self, username, linked_date: dict):
     calendar.LocaleHTMLCalendar.__init__(self,
                                          firstweekday=6,
-                                         locale='ja_jp')
+-                                         locale='ja_jp')
++                                         locale='ja_JP.UTF-8')
 ```
 
 ### adminコントローラを修正する
@@ -182,10 +178,10 @@ RedirectResponseのstatus codeが307なのが原因です。
 controllers.pyのdoneメソッドを少し書き換えましょう。
 
 
-``` python
+``` diff
  
-    return RedirectResponse('/admin',
-                            status_code=status.HTTP_303_SEE_OTHER) 
+-    return RedirectResponse('/admin')
++    return RedirectResponse('/admin', status_code=status.HTTP_303_SEE_OTHER) 
 ```
 
 ## 第6回
@@ -197,21 +193,29 @@ controllers.pyのdoneメソッドを少し書き換えましょう。
 
 また、RedirectResponseも出てきますので、status codeの変更を全章と同様に行ってください。
 
-``` python
+``` diff
     # フォームからデータを取得
-    request_body = await request.body() # form()をbody() に変更
-    data = urllib.parse.parse_qs(request_body.decode())  # この行を追加
-    year = int(data['year'][0])     # [0]を追加
-    month = int(data['month'][0])   # [0]を追加
-    day = int(data['day'][0])       # [0]を追加
-    hour = int(data['hour'][0])     # [0]を追加
-    minute = int(data['minute'][0]) # [0]を追加
+-    request_body = await request.form()
++    request_body = await request.body() 
++    data = urllib.parse.parse_qs(request_body.decode()) 
+
+-    year = int(data['year'])     
+-    month = int(data['month'])   
+-    day = int(data['day'])       
+-    hour = int(data['hour'])     
+-    minute = int(data['minute']) 
++    year = int(data['year'][0])     
++    month = int(data['month'][0])   
++    day = int(data['day'][0])       
++    hour = int(data['hour'][0])     
++    minute = int(data['minute'][0]) 
 
     deadline = datetime(year=year, month=month, day=day,
                         hour=hour, minute=minute)
 
     # 新しくタスクを生成しコミット
-    task = Task(user.id, data['content'][0], deadline) # [0]を追加
+-   task = Task(user.id, data['content'], deadline)
++   task = Task(user.id, data['content'][0], deadline)
     db.session.add(task)
     db.session.commit()
     db.session.close()
