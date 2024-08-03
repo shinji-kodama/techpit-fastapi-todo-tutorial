@@ -1,16 +1,58 @@
-# 1
-## controllers.pyに加筆
+# このリポジトリについて
+## 概要
+
+以下のページのFastAPIでToDoアプリを作るチュートリアルについてのrepositoryです。
+https://rightcode.co.jp/blogs/8708
+
+2019年に作られていて文法がやや古いため、エラーになる部分あったり
+誤記があったりするため、実際に動くコードをアップロードしています。また、記事に沿ってコーディングした際のエラー解消方法をReadme記載しています。
+
+## 本リポジトリの動かし方
+
+- リポジトリをクローン
+``` bash
+git clone https://github.com/shinji-kodama/techpit-fastapi-todo-tutorial.git
+```
+- pythonの仮想環境を作成して使用
+
+windowsの場合
+``` bash
+cd techpit-fastapi-todo-tutorial
+python -m venv .venv
+.\.venv\Scripts\activate
+```
+Linux, Macの場合
+``` bash
+cd techpit-fastapi-todo-tutorial
+python -m venv .venv
+source ./.venv/bin/activate
+```
+
+- requirements.txtを用いてライブラリを一括インストール
+``` bash
+pip install -r requrements.txt
+```
+
+- run.pyを実行
+``` bash
+python run.py
+```
+
+
+# エラー解消方法
+## 第１回
+### controllers.pyに加筆
 
 最後に閉じカッコが足りない
 
-## templates/layout.html
+### templates/layout.html
 
 - jinja2はインストールが必要  
 
 インストールしないと動かないので  
 以下のコマンドを打ちましょう
 
-```
+``` bash
 pip install jinja2
 ```
 
@@ -21,14 +63,14 @@ pip install jinja2
 index.htmlを作成後、サーバーを起動してみてください
 
 
-# 2
+## 第2回
 
-## 実装してみる (models.py)
+### 実装してみる (models.py)
 
 Pydantic使ってないのか  
 どうしよう
 
-## 管理者ページのコントローラを修正する
+### 管理者ページのコントローラを修正する
 
 以下の場所でエラーが出るはず
 ``` python
@@ -48,13 +90,13 @@ app = FastAPI(
 )
 ```
 
-## ビューを作る
+### ビューを作る
 
 少し前の項に書いてありますが、
 templates/resiter.htmlを作成してその中にhtmlを記述してください
 
 
-## POSTメソッド処理を書く
+### POSTメソッド処理を書く
 
 request.form()でエラーが出た場合は、`import urllib.parse`を書き加えて、更に以下のように書き換えてください
 
@@ -83,13 +125,13 @@ request.form()でエラーが出た場合は、`import urllib.parse`を書き加
 
 
 
-## 登録完了のビューをつくる
+### 登録完了のビューをつくる
 
 直前で書いたcontrollerの記述を見れば自明ですはありますが、
 templatesフォルダ内にcomplete.htmlというファイルを作って登録完了の画面の中身を記述しましょう
 
-# 4
-## MyCalendarクラス
+## 第4回
+### MyCalendarクラス
 
 以下の記述の`ja_jp`の部分を`ja_JP.UTF-8`と書き換えるか、空文字にしましょう
 
@@ -100,7 +142,7 @@ def __init__(self, username, linked_date: dict):
                                          locale='ja_jp')
 ```
 
-## adminコントローラを修正する
+### adminコントローラを修正する
 
 timedeltaがimportされてないのでimportしてから使いましょう
 ``` python
@@ -108,7 +150,7 @@ from mycalendar import MyCalendar
 from datetime import datetime, timedelta # timedeltaを追記
 ```
 
-## 動作確認
+### 動作確認
 
 - locale.Error: unsupported locale setting
 `locale.Error: unsupported locale setting`というエラーが出る場合、少し戻って
@@ -129,9 +171,9 @@ insert into task (user_id,content,deadline,date,done)
 values(1,'test_test',datetime('2024-08-05'),datetime('2024-08-04'),0);
 ```
 
-# 5
+## 第5回
 
-## /done をコーディングする
+### /done をコーディングする
 
 - `405 Method Not Allowed` がでる
 
@@ -146,9 +188,9 @@ controllers.pyのdoneメソッドを少し書き換えましょう。
                             status_code=status.HTTP_303_SEE_OTHER) 
 ```
 
-# 6
+## 第6回
 
-## /addをコーディング
+### /addをコーディング
 
 これまでに出てきたのと同様、request.form()は使えないので  
 以下のようにrequest.body()を使います。
@@ -188,7 +230,7 @@ detail.htmlの/add向けのform内にも以下のinputタグを追記してく�
     <input type="hidden" name="day" value="{{ day }}">
 ```
 
-## /delete/{task_id}のコントローラを書く
+### /delete/{task_id}のコントローラを書く
 
 ここも同様にPOSTのデータを受け取って利用しています。
 既出のrequest.form()をrequest.body()に書き換える方法で対応しましょう。
